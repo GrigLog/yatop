@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>yatop</title>
+    <script type="module" src="/src/app.ts"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>yatop</h1>
+          <p>Linux resource monitor</p>
+        </div>
+        <div class="status" id="connectionStatus">connecting</div>
+      </header>
+
+      <section class="metrics">
+        <article class="metric">
+          <span class="metricLabel">CPU</span>
+          <strong id="cpuValue">0%</strong>
+          <div class="meter">
+            <div id="cpuMeter"></div>
+          </div>
+        </article>
+        <article class="metric">
+          <span class="metricLabel">RAM</span>
+          <strong id="memoryValue">0%</strong>
+          <div class="meter">
+            <div id="memoryMeter"></div>
+          </div>
+          <span class="metricHint" id="memoryHint">0 / 0</span>
+        </article>
+      </section>
+
+      <section class="processPanel">
+        <div class="panelHeader">
+          <h2>Processes</h2>
+          <span id="processCount">0</span>
+        </div>
+        <div class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="pid">PID</th>
+                <th data-sort="name">Name</th>
+                <th data-sort="state">State</th>
+                <th data-sort="cpuPercent">CPU</th>
+                <th data-sort="memoryBytes">RAM</th>
+              </tr>
+            </thead>
+            <tbody id="processRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

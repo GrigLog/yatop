@@ -1,0 +1,15 @@
+{
+  "name": "yatop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite frontend --host 127.0.0.1",
+    "build": "vite build frontend",
+    "typecheck": "tsc --noEmit -p frontend/tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  }
+}
