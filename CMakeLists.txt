@@ -9,15 +9,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(Threads REQUIRED)
 
 add_executable(yatop
-    backend/HttpServer.cpp
-    backend/ProcReader.cpp
-    backend/ResourceSampler.cpp
-    backend/main.cpp
+    backend/src/HttpServer.cpp
+    backend/src/ProcReader.cpp
+    backend/src/ResourceSampler.cpp
+    backend/src/main.cpp
 )
 
 target_include_directories(yatop PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/backend
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs
+    ${CMAKE_CURRENT_SOURCE_DIR}/backend/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/backend/libs
 )
 
 target_link_libraries(yatop PRIVATE
