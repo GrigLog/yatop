@@ -5,6 +5,7 @@
 #include <cmath>
 #include <mutex>
 #include <sys/sysinfo.h>
+#include <thread>
 #include <utility>
 
 
@@ -21,7 +22,6 @@ ResourceSampler::~ResourceSampler() {
 }
 
 void ResourceSampler::start() {
-    collect();
     worker = std::jthread([this](auto stopToken) {
         run(stopToken);
     });
@@ -33,9 +33,18 @@ SystemSnapshot ResourceSampler::snapshot() {
 }
 
 void ResourceSampler::run(std::stop_token stopToken) {
+    auto safeInterval = interval > std::chrono::milliseconds::zero() ? interval : std::chrono::milliseconds(1);
+    auto nextSampleAt = std::chrono::high_resolution_clock::now();
+
     while (!stopToken.stop_requested()) {
-        std::this_thread::sleep_for(interval); //todo: use sleep_until
         collect();
+
+        nextSampleAt += safeInterval;
+        while (nextSampleAt <= std::chrono::high_resolution_clock::now())
+            nextSampleAt += safeInterval;
+
+        if (!stopToken.stop_requested())
+            std::this_thread::sleep_until(nextSampleAt);
     }
 }
 
@@ -46,7 +55,6 @@ SystemSnapshot ResourceSampler::collect() {
     auto snapshot = SystemSnapshot();
 
     auto now = std::chrono::system_clock::now();
-    //todo: more precise clock
     snapshot.timestampMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     snapshot.memory = memory;
 

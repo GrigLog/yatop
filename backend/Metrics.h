@@ -38,6 +38,36 @@ struct ProcessRawSample {
     char state = '?';
     std::uint64_t cpuTicks = 0;
     std::uint64_t memoryBytes = 0;
+
+    std::string getState() const {
+        switch (state) {
+        case 'R':
+            return "Running";
+        case 'S':
+            return "Sleeping";
+        case 'D':
+            return "Disk sleep";
+        case 'Z':
+            return "Zombie";
+        case 'T':
+            return "Stopped";
+        case 't':
+            return "Tracing stop";
+        case 'X':
+        case 'x':
+            return "Dead";
+        case 'K':
+            return "Wakekill";
+        case 'W':
+            return "Waking";
+        case 'P':
+            return "Parked";
+        case 'I':
+            return "Idle";
+        default:
+            return "Unknown";
+        }
+    }
 };
 
 //I wanted to keep ProcessRawSample immutable, so I added this new class for the cpuPercent field
@@ -70,7 +100,7 @@ struct SystemSnapshot {
             json["processes"].push_back({
                 { "pid", process.raw.pid },
                 { "name", process.raw.name },
-                { "state", std::string(1, process.raw.state) },
+                { "state", process.raw.getState() },
                 { "cpuPercent", process.cpuPercent },
                 { "memoryBytes", process.raw.memoryBytes },
             });

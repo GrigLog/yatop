@@ -36,12 +36,13 @@ const memoryHint = query("#memoryHint");
 const processRows = query("#processRows");
 const processCount = query("#processCount");
 const connectionStatus = query("#connectionStatus");
+const sortHeaders = [...document.querySelectorAll<HTMLTableCellElement>("th[data-sort]")];
 
 let currentSnapshot: SystemSnapshot | null = null;
 let sortKey: SortKey = "cpuPercent";
 let sortDirection: "asc" | "desc" = "desc";
 
-document.querySelectorAll<HTMLTableCellElement>("th[data-sort]").forEach((header) => {
+sortHeaders.forEach((header) => {
   header.addEventListener("click", () => {
     const nextSortKey = header.dataset.sort as SortKey;
     if (sortKey === nextSortKey) {
@@ -55,6 +56,7 @@ document.querySelectorAll<HTMLTableCellElement>("th[data-sort]").forEach((header
   });
 });
 
+updateSortHeaders();
 void loadSnapshot();
 connectEvents();
 
@@ -98,6 +100,8 @@ function render() {
   if (!currentSnapshot)
     return;
 
+  updateSortHeaders();
+
   const cpuPercent = clampPercent(currentSnapshot.cpu.totalPercent);
   const memoryPercent = clampPercent(currentSnapshot.memory.usedPercent);
 
@@ -132,6 +136,16 @@ function cell(text: string, className?: string) {
     element.className = className;
 
   return element;
+}
+
+function updateSortHeaders() {
+  sortHeaders.forEach((header) => {
+    const isSorted = header.dataset.sort === sortKey;
+    const ariaSort = !isSorted ? "none" : sortDirection === "asc" ? "ascending" : "descending";
+    header.classList.toggle("sort-asc", isSorted && sortDirection === "asc");
+    header.classList.toggle("sort-desc", isSorted && sortDirection === "desc");
+    header.setAttribute("aria-sort", ariaSort);
+  });
 }
 
 function compareProcesses(left: ProcessMetrics, right: ProcessMetrics) {

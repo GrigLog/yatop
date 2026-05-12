@@ -103,7 +103,7 @@ p {
 }
 
 .meter div {
-  background: #1f8a70;
+  background: #006eff;
   height: 100%;
   transition: width 150ms ease-out;
   width: 0;
@@ -160,6 +160,32 @@ th {
   user-select: none;
 }
 
+th[data-sort]::after {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  content: "";
+  display: inline-block;
+  margin-left: 6px;
+  opacity: 0;
+  vertical-align: middle;
+}
+
+th[data-sort].sort-asc::after {
+  border-bottom: 5px solid currentColor;
+  border-top: 0;
+  opacity: 1;
+}
+
+th[data-sort].sort-desc::after {
+  opacity: 1;
+}
+
+th:nth-child(4),
+th:nth-child(5) {
+  text-align: right;
+}
+
 td.number {
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -172,7 +198,6 @@ td.mono {
 
 td.state {
   color: #52616b;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 tr:hover td {
